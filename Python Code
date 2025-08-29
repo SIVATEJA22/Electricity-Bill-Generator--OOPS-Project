@@ -1,0 +1,155 @@
+import time
+
+def print_banner(message, symbol="*"):
+    """Prints a styled banner around a message."""
+    print(symbol * (len(message) + 10))
+    print(f"{symbol * 5} {message} {symbol * 5}")
+    print(symbol * (len(message) + 10))
+
+def fetch_tariff(location, supplier, consumption):
+    """Fetch tariff rate based on location, supplier, and consumption units."""
+    rate_chart = {
+        "surat": {
+            "dgvcl": [
+                (100, 4.05),
+                (300, 5.60),
+                (500, 7.20),
+                (float('inf'), 8.50)
+            ]
+        },
+        "indore": {
+            "mpwest": [
+                (100, 3.90),
+                (300, 5.40),
+                (500, 6.90),
+                (float('inf'), 7.80)
+            ]
+        },
+        "nagpur": {
+            "mahavitaran": [
+                (100, 4.00),
+                (300, 5.70),
+                (500, 7.40),
+                (float('inf'), 8.60)
+            ]
+        },
+        "chandigarh": {
+            "chandigarh electricity": [
+                (100, 3.85),
+                (300, 5.25),
+                (500, 6.85),
+                (float('inf'), 7.90)
+            ]
+        },
+        "kochi": {
+            "kerala kseb": [
+                (100, 3.80),
+                (200, 5.10),
+                (500, 6.70),
+                (float('inf'), 8.20)
+            ]
+        },
+        "visakhapatnam": {
+            "apepdcl": [
+                (100, 3.75),
+                (300, 5.30),
+                (500, 6.90),
+                (float('inf'), 7.90)
+            ]
+        },
+        "vadodara": {
+            "mgvcl": [
+                (100, 4.00),
+                (300, 5.50),
+                (500, 7.00),
+                (float('inf'), 8.10)
+            ]
+        },
+        "kanpur": {
+            "kesco": [
+                (100, 3.95),
+                (300, 5.45),
+                (500, 6.95),
+                (float('inf'), 7.95)
+            ]
+        },
+        "rajkot": {
+            "pgvcl": [
+                (100, 4.10),
+                (300, 5.60),
+                (500, 7.20),
+                (float('inf'), 8.30)
+            ]
+        },
+        "ludhiana": {
+            "pspcl": [
+                (100, 3.90),
+                (300, 5.40),
+                (500, 6.90),
+                (float('inf'), 7.85)
+            ]
+        },
+        "noida": {
+            "npcl": [
+                (100, 4.05),
+                (300, 5.55),
+                (500, 7.10),
+                (float('inf'), 8.20)
+            ]
+        },
+        "gurugram": {
+            "dhesl": [
+                (100, 4.00),
+                (300, 5.50),
+                (500, 7.00),
+                (float('inf'), 8.10)
+            ]
+        }
+    }
+    
+    location = location.lower()
+    supplier = supplier.lower()
+    
+    if location in rate_chart and supplier in rate_chart[location]:
+        for limit, rate in rate_chart[location][supplier]:
+            if consumption <= limit:
+                return rate
+    return None
+
+def compute_bill(consumption, rate):
+    """Calculate the total bill amount."""
+    return consumption * rate
+
+def main():
+    print_banner("Electricity Bill Generator", "#")
+    
+    customer_name = input("Enter your name: ")
+    location = input("Enter your city: ")
+    supplier = input("Enter your electricity supplier: ")
+    
+    try:
+        consumption = float(input("Enter the number of units consumed: "))
+    except ValueError:
+        print("Invalid input for units. Please enter a numerical value.")
+        return
+    
+    tariff = fetch_tariff(location, supplier, consumption)
+    
+    if tariff is None:
+        print("Invalid city, supplier, or consumption range! Please enter valid details.")
+        return
+    
+    total_amount = compute_bill(consumption, tariff)
+    
+    time.sleep(1)
+    print_banner("Billing Summary", "-")
+    print(f"Name: {customer_name}")
+    print(f"City: {location.capitalize()}")
+    print(f"Electricity Supplier: {supplier.capitalize()}")
+    print(f"Units Consumed: {consumption} units")
+    print(f"Tariff: ₹{tariff} per unit")
+    print(f"Total Bill Amount: ₹{total_amount:.2f}")
+    print_banner("Thank You!", "~")
+
+if __name__ == "__main__":
+    main()
